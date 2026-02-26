@@ -52,8 +52,7 @@
             content: '';
             position: absolute;
             left: 0;
-            top: 0;
-            bottom: 0;
+            top: 0;bottom: 0;
             width: 4px;
             background: #1a73e8;
             border-radius: 2px;
@@ -71,7 +70,7 @@
     <!-- Topp Navigation -->
     <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-40 mb-8">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex overflow-x-auto no-scrollbar py-4 gap-6 md:gap-8">
+            <div class="flex overflow-x-auto no-scrollbar py-4 gap-6 md:gap-8 items-center">
                 <button onclick="switchView('2025')" id="btn-2025" class="nav-btn active whitespace-nowrap px-1 pb-1">2025 (Total)</button>
                 <button onclick="switchView('Maj')" id="btn-Maj" class="nav-btn whitespace-nowrap px-1 pb-1">Maj</button>
                 <button onclick="switchView('Juni')" id="btn-Juni" class="nav-btn whitespace-nowrap px-1 pb-1">Juni</button>
@@ -81,8 +80,14 @@
                 <button onclick="switchView('Oktober')" id="btn-Oktober" class="nav-btn whitespace-nowrap px-1 pb-1">Okt</button>
                 <button onclick="switchView('November')" id="btn-November" class="nav-btn whitespace-nowrap px-1 pb-1">Nov</button>
                 <button onclick="switchView('December')" id="btn-December" class="nav-btn whitespace-nowrap px-1 pb-1">Dec</button>
-                <div class="border-l border-slate-200 h-6 my-auto"></div>
+                <div class="border-l border-slate-200 h-6"></div>
                 <button onclick="switchView('Produkter')" id="btn-Produkter" class="nav-btn whitespace-nowrap px-1 pb-1 text-blue-600 font-bold">Produkter Rapport</button>
+                
+                <!-- Google Sheets Link -->
+                <a href="https://docs.google.com/spreadsheets/d/1stH3UIxUtEOXgqpIyp8TL8XFW8vnq_DhrHVlPX6S-8s/edit?usp=sharing" target="_blank" class="ml-auto flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors whitespace-nowrap">
+                    <i class="fa-solid fa-file-excel"></i>
+                    Se Rådata (Google Sheets)
+                </a>
             </div>
         </div>
     </nav>
@@ -171,8 +176,16 @@
         <!-- PRODUCT VIEW -->
         <div id="product-view" class="hidden">
             <header class="mb-6 bg-slate-800 p-8 rounded-3xl shadow-lg text-white">
-                <h1 class="text-3xl font-bold mb-2 tracking-tight">Performance Rapport: Produkter & Brands 2025</h1>
-                <p class="text-slate-300">Dybdegående analyse af salgsdata fordelt på produkt- og brandniveau.</p>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2 tracking-tight">Performance Rapport: Produkter & Brands 2025</h1>
+                        <p class="text-slate-300">Dybdegående analyse af salgsdata fordelt på produkt- og brandniveau.</p>
+                    </div>
+                    <a href="https://docs.google.com/spreadsheets/d/1stH3UIxUtEOXgqpIyp8TL8XFW8vnq_DhrHVlPX6S-8s/edit?usp=sharing" target="_blank" class="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-table-list"></i>
+                        Excel/Sheets Data
+                    </a>
+                </div>
             </header>
 
             <!-- Tip banner -->
