@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Ads & Produkt Performance 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .nav-btn {
+            transition: all 0.2s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-btn.active {
+            color: #1a73e8;
+            border-bottom-color: #1a73e8;
+            font-weight: 600;
+        }
+
+        .metric-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .metric-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.15); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .trend-positive-alt { color: #166534; background: #dcfce7; border-radius: 4px; padding: 2px 6px; font-size: 0.75rem; font-weight: 600; }
+        .trend-negative-alt { color: #991b1b; background: #fee2e2; border-radius: 4px; padding: 2px 6px; font-size: 0.75rem; font-weight: 600; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        th { background-color: #f1f5f9; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; padding: 12px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.875rem; color: #1e293b; transition: background 0.15s; }
+        
+        .clickable-row { cursor: pointer; }
+        .clickable-row:hover td { background-color: #f1f5f9; }
+
+        .section-title {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #1a73e8;
+            border-radius: 2px;
+        }
+
+        #modal-overlay {
+            display: none;
+            backdrop-filter: blur(4px);
+            background-color: rgba(15, 23, 42, 0.6);
+        }
+    </style>
+</head>
+<body class="pb-12">
+
+    <!-- Topp Navigation -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-40 mb-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex overflow-x-auto no-scrollbar py-4 gap-6 md:gap-8">
+                <button onclick="switchView('2025')" id="btn-2025" class="nav-btn active whitespace-nowrap px-1 pb-1">2025 (Total)</button>
+                <button onclick="switchView('Maj')" id="btn-Maj" class="nav-btn whitespace-nowrap px-1 pb-1">Maj</button>
+                <button onclick="switchView('Juni')" id="btn-Juni" class="nav-btn whitespace-nowrap px-1 pb-1">Juni</button>
+                <button onclick="switchView('Juli')" id="btn-Juli" class="nav-btn whitespace-nowrap px-1 pb-1">Juli</button>
+                <button onclick="switchView('August')" id="btn-August" class="nav-btn whitespace-nowrap px-1 pb-1">Aug</button>
+                <button onclick="switchView('September')" id="btn-September" class="nav-btn whitespace-nowrap px-1 pb-1">Sep</button>
+                <button onclick="switchView('Oktober')" id="btn-Oktober" class="nav-btn whitespace-nowrap px-1 pb-1">Okt</button>
+                <button onclick="switchView('November')" id="btn-November" class="nav-btn whitespace-nowrap px-1 pb-1">Nov</button>
+                <button onclick="switchView('December')" id="btn-December" class="nav-btn whitespace-nowrap px-1 pb-1">Dec</button>
+                <div class="border-l border-slate-200 h-6 my-auto"></div>
+                <button onclick="switchView('Produkter')" id="btn-Produkter" class="nav-btn whitespace-nowrap px-1 pb-1 text-blue-600 font-bold">Produkter Rapport</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view">
+            <header class="flex flex-col md:flex-row md:items-center justify-between mb-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider" id="view-badge">Årsrapport</span>
+                        <h1 class="text-2xl font-bold text-slate-800 tracking-tight" id="main-title">Google Ads Performance 2025</h1>
+                    </div>
+                    <p class="text-slate-500 flex items-center gap-2" id="date-label">
+                        <i class="fa-regular fa-calendar"></i> 1. jan 2025 – 31. dec 2025
+                    </p>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-white">
+                <div id="card-klik" class="metric-card bg-blue-600 p-6 rounded-2xl shadow-lg">
+                    <span class="text-xs font-medium opacity-80 uppercase tracking-widest">Klik</span>
+                    <div class="text-3xl font-bold mt-2" id="val-klik">26.457</div>
+                    <div id="trend-klik" class="mt-2 text-xs"></div>
+                </div>
+                <div id="card-exp" class="metric-card bg-red-600 p-6 rounded-2xl shadow-lg">
+                    <span class="text-xs font-medium opacity-80 uppercase tracking-widest">Eksponeringer</span>
+                    <div class="text-3xl font-bold mt-2" id="val-exp">1,75 mio.</div>
+                    <div id="trend-exp" class="mt-2 text-xs"></div>
+                </div>
+                <div id="card-ctr" class="metric-card bg-amber-500 p-6 rounded-2xl shadow-lg">
+                    <span class="text-xs font-medium opacity-80 uppercase tracking-widest">CTR</span>
+                    <div class="text-3xl font-bold mt-2" id="val-ctr">1,52 %</div>
+                    <div id="trend-ctr" class="mt-2 text-xs"></div>
+                </div>
+                <div id="card-cpc" class="metric-card bg-emerald-600 p-6 rounded-2xl shadow-lg">
+                    <span class="text-xs font-medium opacity-80 uppercase tracking-widest">Gns. CPC</span>
+                    <div class="text-3xl font-bold mt-2" id="val-cpc">2,19 kr.</div>
+                    <div id="trend-cpc" class="mt-2 text-xs"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div id="card-pris" class="metric-card bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                    <span class="text-slate-500 text-xs font-bold uppercase mb-2 block">Samlet Forbrug</span>
+                    <div class="text-2xl font-bold text-slate-800" id="val-pris">55.895 kr.</div>
+                    <div id="trend-pris" class="mt-2"></div>
+                </div>
+                <div id="card-konv" class="metric-card bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                    <span class="text-slate-500 text-xs font-bold uppercase mb-2 block">Konverteringer</span>
+                    <div class="text-2xl font-bold text-slate-800" id="val-konv">1.181</div>
+                    <div id="trend-konv" class="mt-2"></div>
+                </div>
+                <div id="card-vaerdi" class="metric-card bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                    <span class="text-slate-500 text-xs font-bold uppercase mb-2 block">Omsætning</span>
+                    <div class="text-2xl font-bold text-slate-800" id="val-vaerdi">744.278 kr.</div>
+                    <div id="trend-vaerdi" class="mt-2"></div>
+                </div>
+                <div id="card-roas" class="metric-card bg-emerald-50 border border-emerald-200 p-6 rounded-2xl shadow-sm">
+                    <span class="text-emerald-700 text-xs font-bold uppercase mb-2 block">Faktisk ROAS</span>
+                    <div class="text-3xl font-extrabold text-emerald-600" id="val-roas">1.331,56 %</div>
+                    <div id="trend-roas" class="mt-2"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div id="card-rate" class="metric-card flex items-center justify-between p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Konverteringsrate</p>
+                        <div id="trend-rate" class="mb-2"></div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800" id="val-rate">4,46 %</div>
+                </div>
+
+                <div id="card-cpa" class="metric-card flex items-center justify-between p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Pris / konv. (CPA)</p>
+                        <div id="trend-cpa" class="mb-2"></div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800" id="val-cpa">47,33 kr.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCT VIEW -->
+        <div id="product-view" class="hidden">
+            <header class="mb-6 bg-slate-800 p-8 rounded-3xl shadow-lg text-white">
+                <h1 class="text-3xl font-bold mb-2 tracking-tight">Performance Rapport: Produkter & Brands 2025</h1>
+                <p class="text-slate-300">Dybdegående analyse af salgsdata fordelt på produkt- og brandniveau.</p>
+            </header>
+
+            <!-- Tip banner -->
+            <div class="mb-8 bg-blue-50 border border-blue-100 p-4 rounded-2xl flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <p class="text-sm text-blue-800">
+                    <strong>Tip:</strong> Hvert brand og produkt nedenfor kan klikkes for at åbne en modal med uddybende info om dets præcise markedsandel.
+                </p>
+            </div>
+
+            <!-- Brand Analyse -->
+            <div class="mb-16">
+                <h2 class="text-2xl font-bold text-slate-800 mb-6 section-title">Brand Analyse</h2>
+                
+                <!-- Indsigtstekst om brands -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm mb-8">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Indblik i Brand Performance 2025</h3>
+                    <div class="text-slate-600 space-y-4 leading-relaxed">
+                        <p>
+                            Analysen af brand-data for 2025 afslører en forretning med en meget stærk kerne. <strong>Pokemon</strong> står som den ubestridte gigant og udgør over 62% af den samlede omsætning på brand-niveau. Dette understreger en enorm afhængighed af samlekort-markedet, men viser også en ekstremt effektiv konvertering inden for denne kategori.
+                        </p>
+                        <p>
+                            Bag giganten ser vi <strong>Heroquest</strong>, som med en omsætning på over 55.000 kr. cementerer sig som det førende brætspils-brand. Selvom antallet af køb (93) er markant lavere end Pokemon (774), er gennemsnitsprisen pr. køb væsentligt højere, hvilket gør det til en kritisk profit-driver.
+                        </p>
+                        <p>
+                            Interessant er spredningen i "mid-tier" brands som <strong>Steiff</strong>, <strong>Maileg</strong> og <strong>Disney Lorcana</strong>. Disse brands bidrager til en sund diversificering af sortimentet og appellerer til forskellige kundesegmenter (henholdsvis luksus-plys, interiør/legetøj og alternative samlekort). At <strong>Wild Republic</strong> ligger højt på antal køb (69 stk), men lavere på omsætning, indikerer, at dette brand fungerer godt som et "add-on" køb med en lavere adgangsbarriere.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-gem text-amber-500"></i> Top 10 Brands: Omsætning
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table id="table-brand-revenue">
+                                <thead>
+                                    <tr><th class="text-center w-12">#</th><th>Brand</th><th class="text-right">Antal Køb</th><th class="text-right">Omsætning</th></tr>
+                                </thead>
+                                <tbody id="brand-revenue-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-boxes-stacked text-blue-500"></i> Top 10 Brands: Antal Køb
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table id="table-brand-qty">
+                                <thead>
+                                    <tr><th class="text-center w-12">#</th><th>Brand</th><th class="text-right">Omsætning</th><th class="text-right">Solgt</th></tr>
+                                </thead>
+                                <tbody id="brand-qty-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produkt Analyse -->
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-6 section-title">Produkt Analyse</h2>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 bg-slate-50">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-crown text-amber-500"></i> Top 20 Produkter: Omsætning
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table id="table-revenue">
+                                <thead>
+                                    <tr><th class="text-center w-12">#</th><th>Produktnavn</th><th class="text-right">Antal</th><th class="text-right">Omsætning</th></tr>
+                                </thead>
+                                <tbody id="revenue-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 bg-slate-50">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-cart-shopping text-blue-500"></i> Top 20 Produkter: Antal Køb
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table id="table-quantity">
+                                <thead>
+                                    <tr><th class="text-center w-12">#</th><th>Produktnavn</th><th class="text-right">Omsætning</th><th class="text-right">Solgt</th></tr>
+                                </thead>
+                                <tbody id="quantity-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-slate-400 text-xs pb-8">
+            Digital Performance Rapport &copy; 2025. Data baseret på præcise GA4 udtræk.
+        </footer>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-4" onclick="closeModal()">
+        <div class="modal-content bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+            <div id="modal-header" class="p-6 text-white bg-slate-800">
+                <div class="flex justify-between items-center">
+                    <h2 id="modal-title" class="text-xl font-bold uppercase tracking-tight">Detaljer</h2>
+                    <button onclick="closeModal()" class="text-white opacity-70 hover:opacity-100"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+            </div>
+            <div class="p-8">
+                <div id="modal-value" class="text-4xl font-extrabold text-slate-900 mb-4 tracking-tighter">---</div>
+                <div id="modal-desc" class="text-slate-600 leading-relaxed italic">---</div>
+                <button onclick="closeModal()" class="mt-8 w-full py-3 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors">Luk</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const totalRevenue = 602675.99;
+        const totalPurchases = 1721;
+        const monthsOrder = ['Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December'];
+        
+        const performanceData = {
+            '2025': { klik: "26.457", exp: "1.753.870", ctr: "1,52 %", cpc: "2,19 kr.", pris: "55.895,37 kr.", konv: "1.181,1", vaerdi: "744.277,86 kr.", roas: "1.331,56 %", rate: "4,46 %", cpa: "47,33 kr." },
+            'Maj': { klik: "1.806", exp: "166.036", ctr: "1,09 %", cpc: "2,41 kr.", pris: "4.354,09 kr.", konv: "55,0", vaerdi: "14.356,64 kr.", roas: "330 %", rate: "3,01 %", cpa: "79,13 kr." },
+            'Juni': { klik: "2.517", exp: "215.802", ctr: "1,17 %", cpc: "2,33 kr.", pris: "5.854,63 kr.", konv: "77,3", vaerdi: "31.697,52 kr.", roas: "541 %", rate: "3,07 %", cpa: "75,71 kr." },
+            'Juli': { klik: "2.391", exp: "181.199", ctr: "1,32 %", cpc: "2,52 kr.", pris: "6.027,63 kr.", konv: "69,2", vaerdi: "74.098,50 kr.", roas: "1.229 %", rate: "2,88 %", cpa: "87,11 kr." },
+            'August': { klik: "3.269", exp: "222.348", ctr: "1,47 %", cpc: "2,37 kr.", pris: "7.745,68 kr.", konv: "127,0", vaerdi: "94.492,45 kr.", roas: "1.220 %", rate: "3,84 %", cpa: "60,97 kr." },
+            'September': { klik: "3.451", exp: "171.455", ctr: "2,01 %", cpc: "2,31 kr.", pris: "7.965,54 kr.", konv: "120,1", vaerdi: "92.390,39 kr.", roas: "1.160 %", rate: "3,40 %", cpa: "66,32 kr." },
+            'Oktober': { klik: "3.746", exp: "182.376", ctr: "2,05 %", cpc: "2,04 kr.", pris: "7.652,68 kr.", konv: "132,0", vaerdi: "157.033,23 kr.", roas: "2.052 %", rate: "3,33 %", cpa: "57,97 kr." },
+            'November': { klik: "4.482", exp: "287.614", ctr: "1,56 %", cpc: "1,82 kr.", pris: "8.179,01 kr.", konv: "248,9", vaerdi: "124.144,95 kr.", roas: "1.518 %", rate: "5,40 %", cpa: "32,86 kr." },
+            'December': { klik: "4.795", exp: "327.040", ctr: "1,47 %", cpc: "1,69 kr.", pris: "8.116,10 kr.", konv: "351,4", vaerdi: "156.064,17 kr.", roas: "1.923 %", rate: "7,23 %", cpa: "23,10 kr." }
+        };
+
+        const kpiDetails = {
+            'klik': { title: 'Klik', desc: 'Antallet af gange brugere har klikket på dine annoncer.' },
+            'exp': { title: 'Eksponeringer', desc: 'Hvor mange gange dine annoncer er blevet vist.' },
+            'ctr': { title: 'CTR', desc: 'Click-Through Rate. Forholdet mellem klik og visninger.' },
+            'cpc': { title: 'Gns. CPC', desc: 'Den gennemsnitlige pris du betaler for hvert klik.' },
+            'pris': { title: 'Samlet Forbrug', desc: 'Det totale annonceforbrug i perioden.' },
+            'konv': { title: 'Konverteringer', desc: 'Antallet af salg eller mål opnået.' },
+            'vaerdi': { title: 'Omsætning', desc: 'Den samlede værdi genereret af dine annoncer.' },
+            'roas': { title: 'Faktisk ROAS', desc: 'Return on Ad Spend. Omsætning divideret med forbrug.' },
+            'rate': { title: 'Konverteringsrate', desc: 'Procentdel af dine klik der ender som konvertering.' },
+            'cpa': { title: 'CPA', desc: 'Cost Per Acquisition. Prisen for at skaffe én konvertering.' }
+        };
+
+        const productData = [
+            { name: "Pokemon-SV Destined Rivals Booster box", qty: 39, rev: 72198.05 },
+            { name: "Pokemon-Mega Charizard X ex UPC", qty: 33, rev: 66998.43 },
+            { name: "Heroquest (DA)", qty: 93, rev: 55375.39 },
+            { name: "Pokemon-SV Destined Rivals Booster pack", qty: 162, rev: 8901.90 },
+            { name: "Pokemon-Mega Evolution-Phantasmal Flames Booster Display", qty: 12, rev: 26399.40 },
+            { name: "Mega Evolution-Phantasmal Flames ETB", qty: 29, rev: 20978.55 },
+            { name: "SV-151 Booster Bundle-Case", qty: 3, rev: 14999.85 },
+            { name: "Pokemon-SV Prismatic Evolutions Mini Tin Display", qty: 9, rev: 13279.55 },
+            { name: "Pokemon-Mega Evolution Booster Box", qty: 8, rev: 11899.70 },
+            { name: "Pokemon-SV Prismatic Evolutions Espeon/Umbreon Collection", qty: 9, rev: 10799.55 },
+            { name: "Pokemon-SV White Flare ETB Reshiram", qty: 17, rev: 9769.15 },
+            { name: "Pokemon-SV Black Bolt ETB Zekrom", qty: 16, rev: 9249.20 },
+            { name: "Pokemon-Mega Evolution Enhanced Booster Box", qty: 3, rev: 7399.85 },
+            { name: "Pokemon-SV 151 Booster Pack Bundle", qty: 12, rev: 6959.40 },
+            { name: "Pokemon-SV Prismatic Evolutions Booster Bundle", qty: 12, rev: 6049.40 },
+            { name: "Charizard EX Special Collection Box", qty: 15, rev: 5699.25 },
+            { name: "Pokemon-Mega Evolution-Phantasmal Flames Booster Bundle", qty: 13, rev: 5199.35 },
+            { name: "Pokemon-SV 151 Mini Tin", qty: 26, rev: 5058.70 },
+            { name: "The Lord of the Rings: Fate of the Fellowship", qty: 9, rev: 4499.55 },
+            { name: "Bomb Busters (EN)", qty: 15, rev: 4449.25 }
+        ];
+
+        const brandData = [
+            { name: "Pokemon", qty: 774, rev: 378071.48 },
+            { name: "Heroquest", qty: 93, rev: 55375.39 },
+            { name: "Steiff", qty: 25, rev: 10572.79 },
+            { name: "Maileg", qty: 49, rev: 9803.76 },
+            { name: "Labubu", qty: 25, rev: 8948.75 },
+            { name: "Wild Republic", qty: 69, rev: 8566.55 },
+            { name: "Disney Lorcana", qty: 36, rev: 8519.25 },
+            { name: "Montii", qty: 41, rev: 5677.95 },
+            { name: "The Lord of the Rings", qty: 9, rev: 4499.55 },
+            { name: "Bomb Busters", qty: 15, rev: 4449.25 }
+        ];
+
+        function switchView(view) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${view}`).classList.add('active');
+
+            if (view === 'Produkter') {
+                document.getElementById('dashboard-view').classList.add('hidden');
+                document.getElementById('product-view').classList.remove('hidden');
+                renderProductReports();
+            } else {
+                document.getElementById('product-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.remove('hidden');
+                updateDashboard(view);
+            }
+        }
+
+        function updateDashboard(view) {
+            const data = performanceData[view];
+            const isYear = view === '2025';
+            document.getElementById('view-badge').innerText = isYear ? 'Årsrapport' : 'Månedsrapport';
+            document.getElementById('main-title').innerText = isYear ? 'Google Ads Performance 2025' : `Performance: ${view} 2025`;
+            
+            document.getElementById('val-klik').innerText = data.klik;
+            document.getElementById('val-exp').innerText = isYear ? "1,75 mio." : formatShort(data.exp);
+            document.getElementById('val-ctr').innerText = data.ctr;
+            document.getElementById('val-cpc').innerText = data.cpc;
+            document.getElementById('val-pris').innerText = isYear ? "55.895 kr." : formatShortKr(data.pris);
+            document.getElementById('val-konv').innerText = isYear ? "1.181" : data.konv;
+            document.getElementById('val-vaerdi').innerText = isYear ? "744.278 kr." : formatShortKr(data.vaerdi);
+            document.getElementById('val-roas').innerText = data.roas;
+            document.getElementById('val-rate').innerText = data.rate;
+            document.getElementById('val-cpa').innerText = data.cpa;
+
+            const keys = ['klik', 'exp', 'ctr', 'cpc', 'pris', 'konv', 'vaerdi', 'roas', 'rate', 'cpa'];
+            keys.forEach(key => {
+                const trendEl = document.getElementById(`trend-${key}`);
+                if (isYear) {
+                    trendEl.innerHTML = '';
+                } else {
+                    const idx = monthsOrder.indexOf(view);
+                    if (idx > 0) {
+                        const cur = parseFloat(data[key].replace(/[^0-9,]/g, '').replace(',', '.'));
+                        const pre = parseFloat(performanceData[monthsOrder[idx-1]][key].replace(/[^0-9,]/g, '').replace(',', '.'));
+                        const diff = ((cur - pre) / pre) * 100;
+                        const isGood = ['cpc', 'pris', 'cpa'].includes(key) ? diff <= 0 : diff >= 0;
+                        trendEl.innerHTML = `<span class="${isGood ? 'trend-positive-alt' : 'trend-negative-alt'} px-2 py-0.5 rounded text-[10px] font-bold"><i class="fa-solid fa-arrow-${diff>=0?'up':'down'} mr-1"></i>${Math.abs(diff).toFixed(1)}%</span>`;
+                    } else trendEl.innerHTML = '';
+                }
+
+                document.getElementById(`card-${key}`).onclick = () => {
+                    openKPIModal(kpiDetails[key].title, data[key], kpiDetails[key].desc);
+                };
+            });
+        }
+
+        function renderProductReports() {
+            const bRevSort = [...brandData].sort((a, b) => b.rev - a.rev).slice(0, 10);
+            const bQtySort = [...brandData].sort((a, b) => b.qty - a.qty).slice(0, 10);
+            const pRevSort = [...productData].sort((a, b) => b.rev - a.rev).slice(0, 20);
+            const pQtySort = [...productData].sort((a, b) => b.qty - a.qty).slice(0, 20);
+
+            // Brands Revenue
+            document.getElementById('brand-revenue-body').innerHTML = bRevSort.map((b, i) => `
+                <tr class="clickable-row" onclick="openShareModal('${b.name}', ${b.rev}, ${b.qty}, 'Brand')">
+                    <td class="text-center font-bold text-slate-400">${i+1}</td>
+                    <td>${b.name}</td>
+                    <td class="text-right">${b.qty}</td>
+                    <td class="text-right font-bold text-emerald-600">${b.rev.toLocaleString('da-DK')} kr.</td>
+                </tr>
+            `).join('');
+
+            // Brands Qty
+            document.getElementById('brand-qty-body').innerHTML = bQtySort.map((b, i) => `
+                <tr class="clickable-row" onclick="openShareModal('${b.name}', ${b.rev}, ${b.qty}, 'Brand')">
+                    <td class="text-center font-bold text-slate-400">${i+1}</td>
+                    <td>${b.name}</td>
+                    <td class="text-right text-slate-500">${b.rev.toLocaleString('da-DK')} kr.</td>
+                    <td class="text-right font-bold text-blue-600">${b.qty} stk</td>
+                </tr>
+            `).join('');
+
+            // Produkter Revenue
+            document.getElementById('revenue-body').innerHTML = pRevSort.map((p, i) => `
+                <tr class="clickable-row" onclick="openShareModal('${p.name}', ${p.rev}, ${p.qty}, 'Produkt')">
+                    <td class="text-center font-bold text-slate-400">${i+1}</td>
+                    <td>${p.name}</td>
+                    <td class="text-right">${p.qty}</td>
+                    <td class="text-right font-bold text-emerald-600">${p.rev.toLocaleString('da-DK')} kr.</td>
+                </tr>
+            `).join('');
+
+            // Produkter Qty
+            document.getElementById('quantity-body').innerHTML = pQtySort.map((p, i) => `
+                <tr class="clickable-row" onclick="openShareModal('${p.name}', ${p.rev}, ${p.qty}, 'Produkt')">
+                    <td class="text-center font-bold text-slate-400">${i+1}</td>
+                    <td>${p.name}</td>
+                    <td class="text-right text-slate-500">${p.rev.toLocaleString('da-DK')} kr.</td>
+                    <td class="text-right font-bold text-blue-600">${p.qty} stk</td>
+                </tr>
+            `).join('');
+        }
+
+        function openShareModal(name, rev, qty, type) {
+            const revShare = ((rev / totalRevenue) * 100).toFixed(2);
+            const qtyShare = ((qty / totalPurchases) * 100).toFixed(2);
+            
+            const content = `
+                <div class="space-y-4">
+                    <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <p class="text-xs text-emerald-600 font-bold uppercase tracking-wide">Andel af Omsætning</p>
+                        <p class="text-2xl font-bold text-emerald-700">${revShare}%</p>
+                        <p class="text-[10px] text-emerald-500 italic">Total brand-omsætning: ${totalRevenue.toLocaleString('da-DK')} kr.</p>
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                        <p class="text-xs text-blue-600 font-bold uppercase tracking-wide">Andel af Køb</p>
+                        <p class="text-2xl font-bold text-blue-700">${qtyShare}%</p>
+                        <p class="text-[10px] text-blue-500 italic">Total brand-køb: ${totalPurchases.toLocaleString('da-DK')} stk.</p>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-4">Analysen er baseret på ${type.toLowerCase()}et: <br><strong>${name}</strong></p>
+                </div>
+            `;
+            
+            document.getElementById('modal-title').innerText = type + " Detaljer";
+            document.getElementById('modal-value').innerText = name;
+            document.getElementById('modal-desc').innerHTML = content;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function openKPIModal(title, value, description) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-value').innerText = value;
+            document.getElementById('modal-desc').innerText = description;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+        function formatShort(str) { const n = parseFloat(str.replace(/\./g, '').replace(',', '.')); return n >= 1000 ? Math.round(n/1000) + " t" : str; }
+        function formatShortKr(str) { const n = parseFloat(str.replace(' kr.', '').replace(/\./g, '').replace(',', '.')); return n >= 1000 ? Math.round(n/1000) + " t kr." : str; }
+
+        document.addEventListener('DOMContentLoaded', () => switchView('2025'));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>
